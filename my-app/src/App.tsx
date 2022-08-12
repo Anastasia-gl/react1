@@ -4,7 +4,11 @@ import IEmployee from './models/Employee.model';
 import IUser from './models/User.model';
 import IUserData from './models/UserData.model';
 import IListItemProps from './models/ListItemProps.model';
+import IIDResource from './models/IDResource.model';
+import data from './json/2.json'
 import './App.css';
+import { json } from 'stream/consumers';
+import { url } from 'inspector';
 
 const ListItem = (props: IListItemProps) => (
           <ListGroup.Item as="li"
@@ -23,6 +27,7 @@ function App() {
 
   const [put, setPutUser] = React.useState<IEmployee[]>([]);
 
+  const [jsonGet, setJsonUser] = React.useState<IIDResource[]>([]);
 
   useEffect(() => {
 
@@ -35,6 +40,9 @@ function App() {
 
         const resultPut = await PutUser();
         setPutUser([resultPut]);
+
+        const resultJson = await GetJSON();
+        setJsonUser([resultJson]);
         
     }
 
@@ -60,6 +68,13 @@ function App() {
                     <div>
                     <ListItem key={item.id} title='Put User' description={item.name + ' ' + item.job}/>
                     </div>             
+                  ))}
+
+                  
+                  {jsonGet.map(item => (
+                    <div>
+                    <ListItem key={item.id} title='Json Color' description={item.color + ' ' + item.name + ' ' + item.year + ' ' + item.pantone_value}/>
+                    </div>             
                   ))}              
           </>);
 }
@@ -72,6 +87,15 @@ async function GetUser() : Promise<IUserData> {
   const a = await result.json();
   console.log(a);
   return a;
+}
+
+//get user from json
+
+async function GetJSON() : Promise<IIDResource> {
+  const result = data;
+ 
+  console.log(result);
+  return result.data;
 }
 
 // post user
